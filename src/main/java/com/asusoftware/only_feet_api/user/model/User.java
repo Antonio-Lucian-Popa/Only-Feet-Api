@@ -32,6 +32,9 @@ public class User {
     @Column(name = "stripe_account_id")
     private String stripeAccountId;
 
+    @Column(name = "stripe_price_id")
+    private String stripePriceId;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

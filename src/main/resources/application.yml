@@ -69,3 +69,9 @@ stripe:
     key:
   webhook:
     secret:
+
+frontend:
+  success:
+    url: https://yourfrontend.com/payment/success
+  cancel:
+    url: https://yourfrontend.com/payment/cancel
