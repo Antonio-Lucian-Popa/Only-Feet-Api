@@ -4,20 +4,20 @@ import com.asusoftware.only_feet_api.payment.model.dto.SetCreatorPriceDto;
 import com.asusoftware.only_feet_api.payment.service.StripeService;
 import com.asusoftware.only_feet_api.user.model.User;
 import com.asusoftware.only_feet_api.user.model.UserRole;
+import com.asusoftware.only_feet_api.user.model.dto.UserDto;
 import com.asusoftware.only_feet_api.user.repository.UserRepository;
 import com.asusoftware.only_feet_api.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/v1/creator")
+@RequestMapping("/api/v1/creators")
 @RequiredArgsConstructor
 public class CreatorController {
 
@@ -41,5 +41,11 @@ public class CreatorController {
 
         return ResponseEntity.ok("Preț setat cu succes.");
     }
+
+    @GetMapping
+    public ResponseEntity<List<UserDto>> getCreators() {
+        return ResponseEntity.ok(userService.getCreators());
+    }
+
 }
 

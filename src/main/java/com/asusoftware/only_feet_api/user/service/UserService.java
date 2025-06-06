@@ -2,17 +2,21 @@ package com.asusoftware.only_feet_api.user.service;
 
 import com.asusoftware.only_feet_api.config.KeycloakService;
 import com.asusoftware.only_feet_api.user.model.User;
+import com.asusoftware.only_feet_api.user.model.UserRole;
 import com.asusoftware.only_feet_api.user.model.dto.*;
 import com.asusoftware.only_feet_api.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -95,5 +99,11 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found")).getId();
     }
 
+    public List<UserDto> getCreators() {
+        List<User> creators = userRepository.findByRole(UserRole.CREATOR, PageRequest.of(0, 5));
+        return creators.stream()
+                .map(user -> mapper.map(user, UserDto.class))
+                .collect(Collectors.toList());
+    }
 }
 
