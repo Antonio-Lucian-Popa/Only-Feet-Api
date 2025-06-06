@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -46,7 +47,10 @@ public class StripePaymentService {
                 .setSuccessUrl(successUrl + "?session_id={CHECKOUT_SESSION_ID}")
                 .setCancelUrl(cancelUrl)
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
-                .putMetadata("creatorId", creatorId.toString())
+                .putMetadata("creatorId", creatorId.toString()) // ✅ aici e corect
+                .setCustomerEmail(userRepository.findById(userId)
+                        .orElseThrow(() -> new RuntimeException("Userul nu există"))
+                        .getEmail())
                 .addLineItem(
                         SessionCreateParams.LineItem.builder()
                                 .setQuantity(1L)
@@ -55,13 +59,16 @@ public class StripePaymentService {
                 )
                 .setSubscriptionData(
                         SessionCreateParams.SubscriptionData.builder()
-                                .setOnBehalfOf(creator.getStripeAccountId()) // Contul Stripe al creatorului
-                                .setApplicationFeePercent(BigDecimal.valueOf(PLATFORM_FEE_AMOUNT)) // Comisionul tău în procente
                                 .setTransferData(
                                         SessionCreateParams.SubscriptionData.TransferData.builder()
-                                                .setDestination(creator.getStripeAccountId()) // Contul creatorului
+                                                .setDestination(creator.getStripeAccountId())
                                                 .build()
                                 )
+                                .build()
+                )
+                .setPaymentIntentData(
+                        SessionCreateParams.PaymentIntentData.builder()
+                                .setApplicationFeeAmount(PLATFORM_FEE_AMOUNT)
                                 .build()
                 )
                 .build();
@@ -69,11 +76,11 @@ public class StripePaymentService {
 
 
         try {
-            // Stripe Connect: creăm sesiunea în contul principal, dar transferăm la creator
             Session session = Session.create(params);
             return session.getUrl();
         } catch (Exception e) {
             throw new RuntimeException("Eroare la crearea sesiunii Stripe: " + e.getMessage());
         }
     }
+
 }
