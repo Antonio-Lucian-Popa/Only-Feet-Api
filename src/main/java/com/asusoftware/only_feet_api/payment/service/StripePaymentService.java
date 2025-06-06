@@ -40,36 +40,37 @@ public class StripePaymentService {
             throw new RuntimeException("Creatorul nu are cont Stripe sau price ID setat.");
         }
 
-        SessionCreateParams params = SessionCreateParams.builder()
-                .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-                .setSuccessUrl(successUrl + "?session_id={CHECKOUT_SESSION_ID}")
-                .setCancelUrl(cancelUrl)
-                .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
-                .putMetadata("creatorId", creatorId.toString())
-                .addLineItem(
-                        SessionCreateParams.LineItem.builder()
-                                .setQuantity(1L)
-                                .setPrice(creator.getStripePriceId())
-                                .build()
-                )
-                .setSubscriptionData(
-                        SessionCreateParams.SubscriptionData.builder()
-                                .setApplicationFeeAmount(PLATFORM_FEE_AMOUNT) // Comisionul tău
-                                .setTransferData(
-                                        SessionCreateParams.SubscriptionData.TransferData.builder()
-                                                .setDestination(creator.getStripeAccountId()) // Contul creatorului
-                                                .build()
-                                )
-                                .build()
-                )
-                .build();
+//        SessionCreateParams params = SessionCreateParams.builder()
+//                .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
+//                .setSuccessUrl(successUrl + "?session_id={CHECKOUT_SESSION_ID}")
+//                .setCancelUrl(cancelUrl)
+//                .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
+//                .putMetadata("creatorId", creatorId.toString())
+//                .addLineItem(
+//                        SessionCreateParams.LineItem.builder()
+//                                .setQuantity(1L)
+//                                .setPrice(creator.getStripePriceId())
+//                                .build()
+//                )
+//                .setSubscriptionData(
+//                        SessionCreateParams.SubscriptionData.builder()
+//                                .setApplicationFeeAmount(PLATFORM_FEE_AMOUNT) // Comisionul tău
+//                                .setTransferData(
+//                                        SessionCreateParams.SubscriptionData.TransferData.builder()
+//                                                .setDestination(creator.getStripeAccountId()) // Contul creatorului
+//                                                .build()
+//                                )
+//                                .build()
+//                )
+//                .build();
 
 
 
         try {
             // Stripe Connect: creăm sesiunea în contul principal, dar transferăm la creator
-            Session session = Session.create(params);
-            return session.getUrl();
+           // Session session = Session.create(params);
+           // return session.getUrl();
+            return null;
         } catch (Exception e) {
             throw new RuntimeException("Eroare la crearea sesiunii Stripe: " + e.getMessage());
         }

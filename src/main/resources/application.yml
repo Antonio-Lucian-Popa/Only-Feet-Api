@@ -65,7 +65,7 @@ media:
       prefix: http://localhost:8080/uploads/
 
 stripe:
-  secret:
+  api:
     key:
   webhook:
     secret:

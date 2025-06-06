@@ -16,11 +16,11 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
     List<SubscriptionEntity> findByCreatorId(UUID creatorId);
 
     boolean existsByUserIdAndCreatorId(UUID userId, UUID creatorId);
-    boolean existsByUserIdAndCreatorIdAndIsActiveTrue(UUID userId, UUID creatorId);
+    boolean existsByUserIdAndCreatorIdAndActiveTrue(UUID userId, UUID creatorId);
 
-    List<SubscriptionEntity> findByUserIdAndIsActiveTrue(UUID userId);
+    List<SubscriptionEntity> findByUserIdAndActiveTrue(UUID userId);
 
-    List<SubscriptionEntity> findByEndDateBeforeAndIsActiveTrue(LocalDateTime date);
+    List<SubscriptionEntity> findByEndDateBeforeAndActiveTrue(LocalDateTime date);
 
     Optional<SubscriptionEntity> findByStripeSubscriptionId(String stripeSubscriptionId);
 }

@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 @Configuration
 public class StripeConfig {
 
-    @Value("${stripe.secret.key}")
+    @Value("${stripe.api.key}")
     private String stripeSecretKey;
 
     @PostConstruct

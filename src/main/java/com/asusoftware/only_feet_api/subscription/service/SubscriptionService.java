@@ -51,11 +51,11 @@ public class SubscriptionService {
     }
 
     public boolean isUserSubscribed(UUID userId, UUID creatorId) {
-        return subscriptionRepository.existsByUserIdAndCreatorIdAndIsActiveTrue(userId, creatorId);
+        return subscriptionRepository.existsByUserIdAndCreatorIdAndActiveTrue(userId, creatorId);
     }
 
     public List<SubscriptionDto> getUserSubscriptions(UUID userId) {
-        return subscriptionRepository.findByUserIdAndIsActiveTrue(userId).stream()
+        return subscriptionRepository.findByUserIdAndActiveTrue(userId).stream()
                 .map(sub -> mapper.map(sub, SubscriptionDto.class))
                 .collect(Collectors.toList());
     }
@@ -68,7 +68,7 @@ public class SubscriptionService {
     }
 
     public void cancelExpiredSubscriptions() {
-        List<SubscriptionEntity> expired = subscriptionRepository.findByEndDateBeforeAndIsActiveTrue(LocalDateTime.now());
+        List<SubscriptionEntity> expired = subscriptionRepository.findByEndDateBeforeAndActiveTrue(LocalDateTime.now());
         expired.forEach(sub -> sub.setActive(false));
         subscriptionRepository.saveAll(expired);
     }
@@ -78,7 +78,7 @@ public class SubscriptionService {
      */
     @Transactional
     public void deactivateExpiredSubscriptions() {
-        List<SubscriptionEntity> expired = subscriptionRepository.findByEndDateBeforeAndIsActiveTrue(LocalDateTime.now());
+        List<SubscriptionEntity> expired = subscriptionRepository.findByEndDateBeforeAndActiveTrue(LocalDateTime.now());
 
         for (SubscriptionEntity s : expired) {
             s.setActive(false);
