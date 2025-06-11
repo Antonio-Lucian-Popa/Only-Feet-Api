@@ -1,5 +1,9 @@
 package com.asusoftware.only_feet_api.post.service;
 
+import com.asusoftware.only_feet_api.media_file.model.MediaFile;
+import com.asusoftware.only_feet_api.media_file.model.MediaLocationType;
+import com.asusoftware.only_feet_api.media_file.model.dto.MediaFileDto;
+import com.asusoftware.only_feet_api.media_file.service.MediaService;
 import com.asusoftware.only_feet_api.post.model.Post;
 import com.asusoftware.only_feet_api.post.model.PostVisibility;
 import com.asusoftware.only_feet_api.post.model.dto.CreatePostDto;
@@ -12,8 +16,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,12 +30,14 @@ import java.util.stream.Collectors;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final MediaService mediaService;
     private final ModelMapper mapper;
 
     /**
      * Creează o postare nouă.
      */
-    public PostDto createPost(CreatePostDto dto, User creator) {
+    @Transactional
+    public PostDto createPost(CreatePostDto dto, User creator, List<MultipartFile> files) {
         Post post = Post.builder()
                 .creatorId(creator.getId())
                 .title(dto.getTitle())
@@ -40,7 +49,28 @@ public class PostService {
                 .build();
 
         post = postRepository.save(post);
-        return mapper.map(post, PostDto.class);
+
+        List<MediaFile> filesSaved = new ArrayList<>();
+
+        if (files != null) {
+            for (MultipartFile file : files) {
+                if (file.isEmpty()) continue;
+                // Salvăm fișierul media și asociem cu postarea
+                MediaFile mediaFile = mediaService.saveFile(file, post.getId(), MediaLocationType.POST);
+                filesSaved.add(mediaFile);
+            }
+        }
+
+        PostDto savedPostDto = mapper.map(postRepository.save(post), PostDto.class);
+
+        if(!filesSaved.isEmpty()) {
+            List<MediaFileDto> mediaFileDtos = filesSaved.stream()
+                    .map(mediaFile -> mapper.map(mediaFile, MediaFileDto.class))
+                    .collect(Collectors.toList());
+            savedPostDto.setMediaFiles(mediaFileDtos);
+
+        }
+        return savedPostDto;
     }
 
     /**

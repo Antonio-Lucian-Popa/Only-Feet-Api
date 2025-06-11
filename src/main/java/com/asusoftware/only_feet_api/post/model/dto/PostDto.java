@@ -1,7 +1,9 @@
 package com.asusoftware.only_feet_api.post.model.dto;
 
+import com.asusoftware.only_feet_api.media_file.model.dto.MediaFileDto;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,4 +18,5 @@ public class PostDto {
     private String mediaType;
     private String visibility;
     private LocalDateTime createdAt;
+    private List<MediaFileDto> mediaFiles;
 }

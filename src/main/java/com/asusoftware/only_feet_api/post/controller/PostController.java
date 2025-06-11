@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -29,9 +31,10 @@ public class PostController {
     @PostMapping
     @PreAuthorize("hasAuthority('CREATOR')")
     public PostDto createPost(@RequestBody @Valid CreatePostDto dto,
+                              @RequestParam(value = "files", required = false) List<MultipartFile> file,
                               @AuthenticationPrincipal Jwt principal) {
         User user = userService.getCurrentUserEntity(principal);
-        return postService.createPost(dto, user);
+        return postService.createPost(dto, user, file);
     }
 
     /**
