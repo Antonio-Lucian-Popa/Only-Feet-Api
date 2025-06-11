@@ -22,7 +22,6 @@ CREATE TABLE post (
     creator_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(255),
     description TEXT,
-    media_type VARCHAR(10) NOT NULL CHECK (media_type IN ('IMAGE', 'VIDEO')),
     visibility VARCHAR(20) NOT NULL DEFAULT 'SUBSCRIBERS' CHECK (visibility IN ('PUBLIC', 'SUBSCRIBERS')),
     created_at TIMESTAMP DEFAULT now(),
     updated_at TIMESTAMP DEFAULT now()

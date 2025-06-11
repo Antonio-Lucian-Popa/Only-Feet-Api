@@ -10,6 +10,5 @@ import lombok.*;
 public class CreatePostDto {
     private String title;
     private String description;
-    private String mediaType;
     private PostVisibility visibility;
 }

@@ -42,7 +42,6 @@ public class PostService {
                 .creatorId(creator.getId())
                 .title(dto.getTitle())
                 .description(dto.getDescription())
-                .mediaType(dto.getMediaType())
                 .visibility(dto.getVisibility())
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())

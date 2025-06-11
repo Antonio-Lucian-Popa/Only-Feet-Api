@@ -1,5 +1,6 @@
 package com.asusoftware.only_feet_api.post.controller;
 
+import com.asusoftware.only_feet_api.post.model.PostVisibility;
 import com.asusoftware.only_feet_api.post.model.dto.CreatePostDto;
 import com.asusoftware.only_feet_api.post.model.dto.PostDto;
 import com.asusoftware.only_feet_api.post.service.PostService;
@@ -30,11 +31,20 @@ public class PostController {
      */
     @PostMapping
     @PreAuthorize("hasAuthority('CREATOR')")
-    public PostDto createPost(@RequestBody @Valid CreatePostDto dto,
-                              @RequestParam(value = "files", required = false) List<MultipartFile> file,
+    public PostDto createPost( @RequestParam("title") String title,
+                               @RequestParam(value = "description", required = false) String description,
+                               @RequestParam("mediaType") String mediaType,
+                               @RequestParam("visibility") PostVisibility visibility,
+                               @RequestParam(value = "files", required = false) List<MultipartFile> files,
                               @AuthenticationPrincipal Jwt principal) {
         User user = userService.getCurrentUserEntity(principal);
-        return postService.createPost(dto, user, file);
+        // Creezi manual DTO-ul
+        CreatePostDto dto = CreatePostDto.builder()
+                .title(title)
+                .description(description)
+                .visibility(visibility)
+                .build();
+        return postService.createPost(dto, user, files);
     }
 
     /**

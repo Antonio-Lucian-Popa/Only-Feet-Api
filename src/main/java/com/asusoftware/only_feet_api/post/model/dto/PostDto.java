@@ -15,7 +15,6 @@ public class PostDto {
     private UUID creatorId;
     private String title;
     private String description;
-    private String mediaType;
     private String visibility;
     private LocalDateTime createdAt;
     private List<MediaFileDto> mediaFiles;
