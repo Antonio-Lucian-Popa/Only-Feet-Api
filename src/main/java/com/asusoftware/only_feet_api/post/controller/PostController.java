@@ -33,7 +33,6 @@ public class PostController {
     @PreAuthorize("hasAuthority('CREATOR')")
     public PostDto createPost( @RequestParam("title") String title,
                                @RequestParam(value = "description", required = false) String description,
-                               @RequestParam("mediaType") String mediaType,
                                @RequestParam("visibility") PostVisibility visibility,
                                @RequestParam(value = "files", required = false) List<MultipartFile> files,
                               @AuthenticationPrincipal Jwt principal) {
